@@ -22,15 +22,16 @@ Pré-requisitos: Node.js 22, Docker Desktop com containers Linux e Git.
 
 Clone os oito repositórios como pastas irmãs. No repositório [smartpark-infra](https://github.com/gksz01/smartpark-infra), siga o README e execute Docker Compose. Os serviços usam MongoDB, SQL Server Developer e Azurite reais localmente.
 
-Copie `.env.example` para `.env`, gere segredos próprios e execute:
+Gere uma configuração local com segredos aleatórios e execute:
 
 ```sh
+node scripts/init-local.mjs
 docker compose --env-file .env up -d --build
 ```
 
 Gateway: http://localhost:8088 · Swagger: `/catalog/docs`, `/booking/docs` e `/docs`.
 
-O arquivo `.env.example` contém a chave pública padrão do emulador Azurite, exclusiva do ambiente local. Nunca reutilize credenciais locais em produção. Os volumes persistem os dados entre reinícios.
+O script cria uma conta e chave próprias para o emulador Azurite no `.env` ignorado pelo Git. Nunca reutilize credenciais locais em produção. Os volumes persistem os dados entre reinícios.
 
 Teste integrado: exporte `ADMIN_EMAIL`, `ADMIN_PASSWORD` e `INTERNAL_API_KEY`, e execute `node tests/e2e.mjs`. `API_URL` permite apontar para a implantação cloud. O teste cria usuários e registros fictícios próprios e desativa o estacionamento ao concluir.
 

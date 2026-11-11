@@ -4,6 +4,8 @@ server {
  server_tokens off;
  client_max_body_size 32k;
  proxy_read_timeout 90s;
+ proxy_http_version 1.1;
+ proxy_set_header Connection "";
  resolver ${NGINX_LOCAL_RESOLVERS} valid=10s ipv6=off;
  set $bff ${BFF_UPSTREAM};
  set $catalog ${CATALOG_UPSTREAM};

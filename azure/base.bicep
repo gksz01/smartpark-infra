@@ -21,10 +21,11 @@ resource db 'Microsoft.Sql/servers/databases@2023-08-01-preview' = {
  sku: {name:'GP_S_Gen5',tier:'GeneralPurpose',family:'Gen5',capacity:2}
  properties: {autoPauseDelay:60,minCapacity:json('0.5'),maxSizeBytes:34359738368,useFreeLimit:true,freeLimitExhaustionBehavior:'AutoPause',requestedBackupStorageRedundancy:'Local'}
 }
-resource environment 'Microsoft.App/managedEnvironments@2024-03-01' = {
+resource environment 'Microsoft.App/managedEnvironments@2026-07-01' = {
  name: 'cae-smartpark-${suffix}'
  location: location
  properties: {
+  environmentMode: 'WorkloadProfiles'
   workloadProfiles: [{name:'Consumption',workloadProfileType:'Consumption'}]
  }
 }
