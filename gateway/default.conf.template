@@ -1,0 +1,21 @@
+limit_req_zone $binary_remote_addr zone=api:10m rate=20r/s;
+server {
+ listen 8080;
+ server_tokens off;
+ client_max_body_size 32k;
+ proxy_read_timeout 90s;
+ resolver ${NGINX_LOCAL_RESOLVERS} valid=10s ipv6=off;
+ set $bff ${BFF_UPSTREAM};
+ set $catalog ${CATALOG_UPSTREAM};
+ set $booking ${BOOKING_UPSTREAM};
+ location /health { return 200 '{"status":"ok","service":"gateway"}'; add_header Content-Type application/json; }
+ location /catalog/docs { rewrite ^/catalog/(.*)$ /$1 break; proxy_pass $catalog; }
+ location /booking/docs { rewrite ^/booking/(.*)$ /$1 break; proxy_pass $booking; }
+ location /catalog/ { rewrite ^/catalog/(.*)$ /$1 break; proxy_pass $bff; }
+ location /booking/ { rewrite ^/booking/(.*)$ /$1 break; proxy_pass $bff; }
+ location / {
+  limit_req zone=api burst=40 nodelay;
+  proxy_pass $bff;
+  proxy_set_header X-Forwarded-Proto https;
+ }
+}
