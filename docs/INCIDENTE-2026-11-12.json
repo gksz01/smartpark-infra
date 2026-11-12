@@ -1,0 +1,36 @@
+{
+  "verifiedAt": "2026-11-12T21:02:26.286Z",
+  "incident": "SQL free allowance exhausted; AutoPause stopped the database",
+  "sql": {
+    "status": "Online",
+    "useFreeLimit": true,
+    "freeLimitExhaustionBehavior": "BillOverUsage",
+    "autoPauseDelayMinutes": 60
+  },
+  "booking": {
+    "image": "gkszz/smartpark-reservation-service:v1.3",
+    "digest": "sha256:ef679bec610c1cddf34d74b120ed0ce97f70be3b9a56d0e1d6f8d0fcff6aaf21",
+    "revision": "booking--0000002"
+  },
+  "events": {
+    "normal": "dispatch after successful commit on create/payment/cancel",
+    "recoveryScheduleUTC": "0 0 */2 * * *",
+    "runOnStartup": false,
+    "failure": "preserve committed result and pending Outbox event",
+    "delivery": "at least once; consumer deduplicates eventId"
+  },
+  "validation": {
+    "reservationTests": 30,
+    "functionTests": 3,
+    "publicE2EChecks": 11,
+    "forceDispatch": false,
+    "publicE2EResult": "passed",
+    "gateway": "https://gateway.redmushroom-409e0858.brazilsouth.azurecontainerapps.io"
+  },
+  "limitations": [
+    "Cost reduction and SQL inactivity pause have not yet been measured over a full idle cycle.",
+    "Recovery timer can still wake SQL and consume student credits.",
+    "Cold starts may add latency; warm the application before presentation.",
+    "Earlier PDF/video guide describes the old two-minute Timer; present post-commit dispatch and two-hour recovery instead."
+  ]
+}

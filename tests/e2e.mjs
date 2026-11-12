@@ -23,7 +23,7 @@ const paid=await expectCall('/reservations/'+reservation.id+'/payment',{token:us
 await expectCall('/reservations/'+reservation.id+'/payment',{token:user.token,method:'POST',body:{result:'approved'}},201);
 await expectCall('/reservations/'+reservation.id,{token:user.token,method:'PUT',body:{start,end}},409);ok('pagamento simulado e bloqueio de alteração após pagamento');
 await expectCall('/reservations/'+reservation.id,{token:user.token,method:'DELETE'},200);ok('cancelamento');
-if(process.env.INTERNAL_API_KEY)await expectCall('/internal/outbox/dispatch',{method:'POST',serviceKey:process.env.INTERNAL_API_KEY},201);
+if(process.env.INTERNAL_API_KEY && process.env.E2E_FORCE_DISPATCH==='true')await expectCall('/internal/outbox/dispatch',{method:'POST',serviceKey:process.env.INTERNAL_API_KEY},201);
 const q=new URLSearchParams({start,end});let aggregate;
 for(let i=0;i<20;i++){aggregate=await expectCall('/aggregated-data?'+q,{token:user.token},200);if(aggregate.notifications.items.filter(n=>n.reservationId===reservation.id).length===3)break;await new Promise(r=>setTimeout(r,1500));}
 assert.equal(aggregate.availability.find(c=>c.parkingId===parking.id).available,1);assert.equal(aggregate.notifications.source,'azure-functions');
